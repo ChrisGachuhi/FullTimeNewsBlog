@@ -1,0 +1,19 @@
+*{
+  margin: auto;
+  padding: 0;
+}
+
+.Navbar{
+  width: 100%;
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  background: #f6f6f6;
+}
+
+.Navbar > a{
+  margin: 20px;
+  text-decoration: none;
+  color: darkblue;
+  font-size: 24px;
+}

@@ -18,9 +18,11 @@ function Login({ setIsAuth }) {
   return (
     <div className="LoginPage">
       <p>sign in with google</p>
-      <button className="GoogleSignIn" onClick={googleSignIn}>Sign in with Google</button>
+      <button className="GoogleSignIn" onClick={googleSignIn}>
+        Sign in with Google
+      </button>
     </div>
-  )
+  );
 }
 
 export default Login

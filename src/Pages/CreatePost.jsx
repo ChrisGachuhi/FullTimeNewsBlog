@@ -7,12 +7,20 @@ import { useNavigate } from "react-router";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 
+import ReactQuill from "react-quill";
+import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import "react-quill/dist/quill.snow.css";
+
 function CreatePost({ isAuth, setImageLocation }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [postDescription, setPostDescription] = useState("");
-  const [postText, setPostText] = useState("");
   const [image, setImage] = useState();
+
+  const [postText, setPostText] = useState({value: null});
+  const handlePostText = value => {
+    setPostText({value})
+  }
 
   const postCollectionRef = collection(db, "BlogPosts");
 
@@ -63,18 +71,17 @@ function CreatePost({ isAuth, setImageLocation }) {
 
           var timestamp =
             "Posted: " + new Date().today() + " at: " + new Date().timeNow();
-          
-          var x = function uuidv4() {
-            return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-              (
-                c ^
-                (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-              ).toString(16)
-            );
-          };
+
+          // var x = function uuidv4() {
+          //   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+          //     (
+          //       c ^
+          //       (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+          //     ).toString(16)
+          //   );
+          // };
 
           await addDoc(postCollectionRef, {
-            docKey: x(),
             category,
             title,
             postDescription,
@@ -82,7 +89,7 @@ function CreatePost({ isAuth, setImageLocation }) {
             imageURL,
             author: {
               name: auth.currentUser.displayName,
-              id: auth.currentUser.uid,
+              authorId: auth.currentUser.uid,
               timestamp,
             },
           })
@@ -147,22 +154,25 @@ function CreatePost({ isAuth, setImageLocation }) {
         </div>
 
         <div className="inputGroup">
-          <label htmlFor="">Post: </label> <br />
-          <textarea
-            type="text"
-            placeholder="Post..."
-            onChange={(event) => {
-              setPostText(event.target.value);
-            }}
-          />
-        </div>
-
-        <div className="inputGroup">
           <input
             type="file"
             onChange={(event) => {
               setImage(event.target.files[0]);
             }}
+          />
+        </div>
+
+        <div className="text-editor">
+          <label htmlFor="">Post: </label> <br />
+
+          <EditorToolbar />
+          <ReactQuill
+            value={postText.value}
+            theme="snow"
+            onChange={handlePostText}
+            placeholder={"Write something awesome..."}
+            modules={modules}
+            formats={formats}
           />
         </div>
 

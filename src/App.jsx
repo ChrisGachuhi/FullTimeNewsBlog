@@ -44,7 +44,7 @@ function App() {
         <Route path="/" element={<Home isAuth={isAuth} imageLocation={imageLocation} />} />
         <Route path="/Login" element={<Login setIsAuth={setIsAuth} />} />
         <Route path="/CreatePost" element={<CreatePost isAuth={isAuth} setImageLocation={setImageLocation} />} />
-        <Route path="/Article" element={<Article/>} />
+        <Route path="/Article/:id" element={<Article/>} />
       </Routes>
     </BrowserRouter>
   );

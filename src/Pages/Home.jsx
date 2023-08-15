@@ -3,74 +3,75 @@
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
+import { useNavigate } from "react-router";
 
 function Home({ isAuth }) {
   const [postsList, setPostsList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const postCollectionRef = collection(db, "BlogPosts");
     const getPosts = async () => {
-      const data = await getDocs(postCollectionRef);
+      const articleItems = []; // Changed variable name for clarity
+      const querySnapshot = await getDocs(postCollectionRef);
 
-      // console.log(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      querySnapshot.forEach((articleDoc) => {
+        articleItems.push({ id: articleDoc.id, ...articleDoc.data() });
+      });
 
-      setPostsList(
-        data.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }))
-      );
+      setPostsList(articleItems); // Moved the state update outside the loop
+
     };
 
     getPosts();
   }, []);
 
-  const deletePost = async (id) => {
-    const postDoc = doc(db, "BlogPosts", id);
-    await deleteDoc(postDoc)
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  };
+ const deletePost = async (id) => {
+   const postDoc = doc(db, "BlogPosts", id);
+   await deleteDoc(postDoc)
+     .then(() => {
+       // Remove the deleted post from the state instead of reloading
+       setPostsList((prevPosts) => prevPosts.filter((post) => post.id !== id));
+     })
+     .catch((err) => {
+       console.log(err.message);
+     });
+ };
 
   return (
     <div className="HomePage">
       <div className="BlogList">
-        {postsList.map((post) => (
-          <div className="postItem" key={Math.random()}>
+        {postsList.map((articleDoc) => (
+          <div className="postItem" key={articleDoc.id}>
             <div
               className="postImage"
-              style={{ backgroundImage: `url(${post.imageURL})` }}
-            >
-              {/* <img src={post.imageURL} alt="" /> */}
-            </div>
+              style={{ backgroundImage: `url(${articleDoc.imageURL})` }}
+              onClick={() => navigate(`/Article/${articleDoc.id}`)}
+            ></div>
 
             <div className="postPreview">
               <div className="postHeader">
-                <h1>{post.title}</h1>
+                <h1>{articleDoc.title}</h1>
                 <div className="deletePost">
-                  {isAuth && post.author.id === auth.currentUser.uid && (
-                    <button
-                      onClick={() => {
-                        deletePost(post.id);
-                      }}
-                    >
-                      &#128465;
-                    </button>
-                  )}
+                  {isAuth &&
+                    articleDoc.author.authorId == auth.currentUser.uid && (
+                      <button
+                        onClick={() => {
+                          deletePost(articleDoc.id);
+                        }}
+                      >
+                        &#128465;
+                      </button>
+                    )}
                 </div>
               </div>
 
               <div className="postBody">
-                {/* <p>{post.postText}</p> */}
-                <p>{post.postDescription}</p>
+                <p>{articleDoc.postDescription}</p>
               </div>
               <div className="postAuthor">
-                <h3>By: {post.author.name}</h3>
-                <h4>{post.author.timestamp}</h4>
+                <h3>By: {articleDoc.author.name}</h3>
+                <h4>{articleDoc.author.timestamp}</h4>
               </div>
             </div>
           </div>

@@ -1,58 +1,62 @@
-import { collection, doc, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
 import { useParams } from "react-router-dom";
 
+function sanitizeHTML(input) {
+  const doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.body.innerHTML;
+}
+
 function Article() {
   const [article, setArticle] = useState(null);
-
-  const { id } = useParams()
-  // console.log(id)
+  const { id } = useParams();
 
   useEffect(() => {
-
     const getArticle = async () => {
-      const articleDoc = query(collection(db, "BlogPosts"), where("docKey", "==", id))
-      let articleItem = []
+      try {
+        const articleRef = doc(db, "BlogPosts", id);
+        const articleSnapshot = await getDoc(articleRef);
 
-      const querySnapshot = await getDocs(articleDoc)
+        if (articleSnapshot.exists()) {
+          setArticle({ id: articleSnapshot.id, ...articleSnapshot.data() });
+        } else {
+          console.log("Article not found");
+        }
+      } catch (error) {
+        console.error("Error fetching article:", error);
+      }
+    };
 
-      querySnapshot.forEach((articleDoc) => {
-        articleItem.push({ ...articleDoc.data(), id: doc.id });
-        setArticle([...articleItem])
-        // console.log(article)
-      })
-
-    }
-    getArticle()
-  },[])
+    getArticle();
+  }, [id]);
 
   return (
-    <div className="HomePage">
-      <div className="BlogList">
-        {article.map((articleItem) => (
-          <div className="postItem" key={articleItem.docKey}>
-            <div
-              className="postImage"
-              style={{ backgroundImage: `url(${articleItem.imageURL})` }}
-            ></div>
+    <div className="ArticlePage">
+      {article ? (
+        <div className="postItem">
+          {/* <div
+            className="postImage"
+            style={{ backgroundImage: `url(${article.imageURL})` }}
+          ></div> */}
 
-            <div className="postPreview">
-              <div className="postHeader">
-                <h1>{articleItem.title}</h1>
-              </div>
-
-              <div className="postBody">
-                <p>{articleItem.postDescription}</p>
-              </div>
-              <div className="postAuthor">
-                <h3>By: {articleItem.author.name}</h3>
-                <h4>{articleItem.author.timestamp}</h4>
-              </div>
-            </div>
+          <div className="postAuthor">
+            <h3>By: {article.author.name}</h3>
+            <h4>{article.timestamp}</h4>
           </div>
-        ))}
-      </div>
+
+          <div className="postPreview">
+            <div
+              className="postBody"
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHTML(article.postText.value),
+              }}
+            ></div>
+          </div>
+        </div>
+      ) : (
+        <p>Loading article...</p>
+      )}
     </div>
   );
 }

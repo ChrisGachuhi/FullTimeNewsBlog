@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
 import { useNavigate } from "react-router";
@@ -13,30 +13,34 @@ function Home({ isAuth }) {
     const postCollectionRef = collection(db, "BlogPosts");
     const getPosts = async () => {
       const articleItems = []; // Changed variable name for clarity
-      const querySnapshot = await getDocs(postCollectionRef);
+      const querySnapshot = await getDocs(
+        query(
+          postCollectionRef,
+          orderBy("timestamp", "desc") // Order by timestamp in descending order
+        )
+      );
 
       querySnapshot.forEach((articleDoc) => {
         articleItems.push({ id: articleDoc.id, ...articleDoc.data() });
       });
 
       setPostsList(articleItems); // Moved the state update outside the loop
-
     };
 
     getPosts();
   }, []);
 
- const deletePost = async (id) => {
-   const postDoc = doc(db, "BlogPosts", id);
-   await deleteDoc(postDoc)
-     .then(() => {
-       // Remove the deleted post from the state instead of reloading
-       setPostsList((prevPosts) => prevPosts.filter((post) => post.id !== id));
-     })
-     .catch((err) => {
-       console.log(err.message);
-     });
- };
+  const deletePost = async (id) => {
+    const postDoc = doc(db, "BlogPosts", id);
+    await deleteDoc(postDoc)
+      .then(() => {
+        // Remove the deleted post from the state instead of reloading
+        setPostsList((prevPosts) => prevPosts.filter((post) => post.id !== id));
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
 
   return (
     <div className="HomePage">

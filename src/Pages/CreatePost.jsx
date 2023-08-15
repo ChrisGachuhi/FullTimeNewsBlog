@@ -87,10 +87,10 @@ function CreatePost({ isAuth, setImageLocation }) {
             postDescription,
             postText,
             imageURL,
+            timestamp,
             author: {
               name: auth.currentUser.displayName,
               authorId: auth.currentUser.uid,
-              timestamp,
             },
           })
             .then(() => {

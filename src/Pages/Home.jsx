@@ -1,14 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebaseConfig";
 import { useNavigate } from "react-router";
 
 function Home({ isAuth }) {
+  // STATE TO STORE LIST OF POSTS
   const [postsList, setPostsList] = useState([]);
   const navigate = useNavigate();
 
+  // EFFECT TO FETCH AND SET LIST OF POSTS
   useEffect(() => {
     const postCollectionRef = collection(db, "BlogPosts");
     const getPosts = async () => {
@@ -30,6 +39,7 @@ function Home({ isAuth }) {
     getPosts();
   }, []);
 
+  // FUNCTION TO DELETE A POST
   const deletePost = async (id) => {
     const postDoc = doc(db, "BlogPosts", id);
     await deleteDoc(postDoc)
@@ -58,7 +68,9 @@ function Home({ isAuth }) {
                 <h1>{articleDoc.title}</h1>
                 <div className="deletePost">
                   {isAuth &&
-                    articleDoc.author.authorId == auth.currentUser.uid && (
+                    (articleDoc.author.authorId == auth.currentUser.uid ||
+                      auth.currentUser.uid ==
+                        "ox7xbHssC8R0shI3jXXXWiBUvmF2") && (
                       <button
                         onClick={() => {
                           deletePost(articleDoc.id);
@@ -73,6 +85,7 @@ function Home({ isAuth }) {
               <div className="postBody">
                 <p>{articleDoc.postDescription}</p>
               </div>
+
               <div className="postAuthor">
                 <h3>By: {articleDoc.author.name}</h3>
                 <h4>{articleDoc.author.timestamp}</h4>

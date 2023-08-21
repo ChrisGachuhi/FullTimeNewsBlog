@@ -10,22 +10,29 @@ import CreatePost from "./Pages/CreatePost";
 import Article from "./Pages/Article";
 
 function App() {
+  // STATE TO MANAGE USER AUTHENTICATION AND IMAGE LOCATION
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const [imageLocation, setImageLocation] = useState("");
 
+  // FUNCTION TO SIGN OUT THE USER AND REDIRECT TO THE LOGIN PAGE
   function signOutUser() {
+    // Sign out using Firebase Auth
     signOut(auth).then(() => {
+      // Clear local storage and set authentication status to false
       localStorage.clear();
       setIsAuth(false);
+      // Redirect to the Login page
       window.location.pathname = "/Login";
     });
   }
 
   return (
     <BrowserRouter>
+      {/* NAVIGATION BAR */}
       <nav className="Navbar">
         <Link to={"/"}>Home</Link>
 
+        {/* CONDITIONALLY RENDER LOGIN AND CREATEPOST LINKS AND LOGOUT BUTTON */}
         {!isAuth ? (
           <Link to={"/Login"}>Login</Link>
         ) : (
@@ -34,22 +41,25 @@ function App() {
             <button onClick={signOutUser}>Log Out</button>
           </>
         )}
-
-        {/* READ AS: if user is not authenticated, redirect to Login Page; else display CreatePost Link and LogOut button */}
       </nav>
 
+      {/* ROUTING SETUP */}
       <Routes>
+        {/* ROUTE FOR HOME PAGE */}
         <Route
           path="/"
           element={<Home isAuth={isAuth} imageLocation={imageLocation} />}
         />
+        {/* ROUTE FOR LOGIN PAGE */}
         <Route path="/Login" element={<Login setIsAuth={setIsAuth} />} />
+        {/* ROUTE FOR CREATEPOST PAGE */}
         <Route
           path="/CreatePost"
           element={
             <CreatePost isAuth={isAuth} setImageLocation={setImageLocation} />
           }
         />
+        {/* ROUTE FOR ARTICLE PAGE */}
         <Route path="/Article/:id" element={<Article isAuth={isAuth} />} />
       </Routes>
     </BrowserRouter>

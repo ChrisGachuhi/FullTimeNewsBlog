@@ -1,27 +1,84 @@
 *{
   margin: auto;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
+/* NAVBAR */
 
-.HomePage{
-  height: 91.5dvh;
-  width: 100dvw;
-  display: flex;
-}
-
-.Navbar{
+.Navbar {
   width: 100%;
   display: flex;
   justify-content: center;
   background: #f6f6f6;
 }
 
-.Navbar > a{
+.Navbar > a {
   margin: 20px;
   text-decoration: none;
   color: darkblue;
   font-size: 24px;
+}
+
+/* LOGIN PAGE */
+
+.LoginPage {
+  height: 91.5vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.LoginPage::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(/src/assets/wallhaven-47227y.jpeg);
+  background-position: center;
+  background-size: cover;
+  opacity: 0.6;
+}
+.Login--Card {
+  height: 65%;
+  width: 30%;
+  border-radius: 10px;
+  background-color: rgba(110, 138, 119, 0.8);
+  position: relative;
+  z-index: 1;
+}
+.Login--Card > input{
+  width: 90%;
+  height: 50px;
+  margin: 30px 5%;
+  border: none;
+  border-bottom: solid 1px #f2f2f2;
+  border-radius: 10px;
+}
+.Login--Card > input::placeholder {
+  padding-left: 20px;
+  font-size: 18px;
+}
+.Login--Card button{
+  height: 40px;
+  font-size: 18px;
+  width: 60%;
+  margin: 30px 20% 0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+/* HOMEPAGE */
+
+.HomePage{
+  height: 91.5dvh;
+  width: 100dvw;
+  display: flex;
 }
 
 .BlogList{
@@ -40,7 +97,7 @@
 .postImage {
   height: 100%;
   width: 40%;
-  background-position: center;
+  background-position: top;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -55,17 +112,20 @@
 }
 
 .postHeader{
-  height: 50%;
+  padding: 10px 0;
+  height: fit-content;
   width: 100%;
-  overflow: hidden;
-  text-transform: capitalize;
   display: flex;
   justify-content: space-evenly;
+  text-transform: capitalize;
+  overflow: hidden;
 }
 
 .postBody{
-  height: 100%;
+  /* background-color: aqua; */
+  height: 40%;
   width: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   font-size: 18px;
@@ -77,6 +137,75 @@
   font-size: 12px;
   display: flex;
 }
+
+
+/* CREATE POST PAGE */
+.CreatePostPage{
+  height: 91.5dvh;
+  width: 100dvw;
+}
+.PostContainer{
+  width: 90%;
+  height: 90%;
+  overflow-y: scroll;
+  text-align: center;
+}
+.Header--InputGroup{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.Header--InputGroup input{
+  width: 40%;
+  height: 40px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  border-bottom: solid 1px #f6f6f6;
+}
+.Header--InputGroup select{
+  width: 40%;
+  height: 40px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  border-bottom: solid 1px #f6f6f6;
+}
+.PostDescription--InputGroup{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.PostDescription--InputGroup > textarea{
+  width: 40%;
+  height: 80px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  border-bottom: solid 1px #f6f6f6;
+}
+.PostDescription--InputGroup > input{
+  width: 40%;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 10px;
+  border-bottom: solid 1px #f6f6f6;
+}
+.PostEntry--InputGroup{
+  /* height: 48%; */
+  padding: 20px 0;
+  /* background-color: aqua; */
+  margin-bottom: 20px;
+}
+.PostContainer > button{
+  height: 40px;
+  width: 20%;
+  border: none;
+  border-radius: 10px;
+}
+
+
+/* ARTICLE PAGE */
 
 .ArticlePage{
   height: 91.5dvh;
@@ -130,7 +259,7 @@
   width: 25%;
   height: 100%;
   padding: 8px 0;
-  background-color: aqua;
+  /* background-color: aqua; */
 }
 
 .postRecommendations h2{
@@ -159,7 +288,7 @@
 .postRecommendations .recomendationImage {
   height: 80%;
   width: 50%;
-  background-position: center;
+  background-position: top;
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -178,3 +307,70 @@
   font-size: 12px;
   display: flex;
 } */
+
+
+
+
+
+
+
+/* * Set responsive font size */ 
+@media (max-width: 768px) {
+
+  /* Adjust font size for smaller screens */
+  html {
+    font-size: 14px;
+    padding: 0 5px;
+  }
+
+  /* Make the LoginPage responsive */
+  .LoginPage::before {
+    background-size: cover;
+    opacity: 0.8;
+  }
+
+  /* Adjust Login--Card size */
+  .Login--Card {
+    height: 75%;
+    width: 80%;
+  }
+
+  /* Adjust input and button styles */
+  .Login--Card>input {
+    width: 80%;
+    margin: 20px 10%;
+  }
+
+  .Login--Card button {
+    width: 70%;
+    margin: 20px 15% 0;
+  }
+
+  /* Make HomePage responsive */
+  .HomePage {
+    flex-direction: column;
+  }
+
+  .BlogList {
+    width: 100%;
+  }
+
+  /* Adjust postItem size */
+  .postItem {
+    height: auto;
+    padding: 10px 0;
+    flex-direction: column;
+  }
+
+  .postImage {
+    width: 100%;
+    height: 180px;
+    /* Adjust image height */
+  }
+
+  .postPreview {
+    width: 100%;
+  }
+
+  /* ... (more responsive adjustments for other sections) */
+}

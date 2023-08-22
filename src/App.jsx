@@ -2,7 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { auth } from "../firebaseConfig";
 
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";

@@ -9,7 +9,7 @@ import {
   query,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { auth, db } from "../firebaseConfig";
+import { auth, db } from "../../firebaseConfig";
 import { useNavigate } from "react-router";
 
 function Home({ isAuth }) {
@@ -68,9 +68,10 @@ function Home({ isAuth }) {
                 <h1>{articleDoc.title}</h1>
                 <div className="deletePost">
                   {isAuth &&
-                    (articleDoc.author.authorId == auth.currentUser.uid ||
-                      auth.currentUser.uid ==
-                        "ox7xbHssC8R0shI3jXXXWiBUvmF2") && (
+                    articleDoc.author.authorId ==
+                      (auth.currentUser.uid ||
+                        auth.currentUser.uid ==
+                          "ox7xbHssC8R0shI3jXXXWiBUvmF2") && (
                       <button
                         onClick={() => {
                           deletePost(articleDoc.id);

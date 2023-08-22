@@ -4,7 +4,7 @@
 // IMPORTING REQUIRED REACT HOOKS AND MODULES
 import { useEffect, useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import { db, auth, storage } from "../firebaseConfig";
+import { db, auth, storage } from "../../firebaseConfig";
 import { useNavigate } from "react-router";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
@@ -51,6 +51,19 @@ function CreatePost({ isAuth, setImageLocation }) {
           // ... (Code for creating a new post document)
 
           // ADD NEW POST DOCUMENT TO FIRESTORE
+          Date.prototype.timeNow = function () {
+            return (
+              (this.getHours() < 10 ? "0" : "") +
+              this.getHours() +
+              ":" +
+              (this.getMinutes() < 10 ? "0" : "") +
+              this.getMinutes() +
+              ":" +
+              (this.getSeconds() < 10 ? "0" : "") +
+              this.getSeconds()
+            );
+          };
+
           var timestamp =
             "Posted: " + new Date().today() + " at: " + new Date().timeNow();
 
